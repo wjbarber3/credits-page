@@ -1,0 +1,7 @@
+[
+  { "type": "Individual", "price": 20, "bonus": 0 },
+  { "type": "Professional", "price": 50, "bonus": 0 },
+  { "type": "Most Popular", "price": 100, "bonus": 10 },
+  { "type": "Big Bonus", "price": 200, "bonus": 22 },
+  { "type": "Best Value", "price": 500, "bonus": 60 }
+]

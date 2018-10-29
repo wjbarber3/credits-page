@@ -12,12 +12,6 @@ export default {
   name: 'app',
   components: {
     CreditList
-  },
-  data () {
-    return {
-      headline: 'Stock up on Credits',
-      subhead: 'Save money and get free bonus credits when you buy in bulk'
-    }
   }
 }
 </script>
@@ -30,6 +24,20 @@ export default {
   body {
     background: $light_grey;
     padding-top: 43px;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  .clearfix:after, .clearfix:before {
+    display: table;
+    content: '';
+    line-height: 0;
+  }
+
+  .clearfix:after {
+    clear: both;
   }
 
 </style>
