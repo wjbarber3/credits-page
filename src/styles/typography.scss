@@ -1,0 +1,21 @@
+@import 'variables.scss';
+
+#app {
+  font-family: "Helvetica Neue",helvetica,Arial,sans-serif;
+  -webkit-font-smoothing: subpixel-antialiased;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 {
+  font-size: 68px;
+  line-height: 54px;
+  margin: 0 0 30px;
+  color: $dark_grey;
+  font-weight: 100;
+}
+
+h2 {
+  font-size: 23px;
+  font-weight: 300;
+  color: $grey;
+}
