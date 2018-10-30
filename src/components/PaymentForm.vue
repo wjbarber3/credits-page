@@ -1,7 +1,14 @@
 <template>
   <div class="payment-container">
     <h4>Complete Purchase</h4>
-      <form v-on:submit.prevent="creditSubmit(price)">
+      <form @submit.prevent="submitForm()">
+
+         <!-- <p v-if="errors.length">
+          <b>Please correct the following error(s):</b>
+          <ul>
+            <li v-for="error in errors">{{ error }}</li>
+          </ul>
+        </p> -->
 
         <div class="radio-group">
           <label class="radio-group-label">Payment Method:</label>
@@ -24,18 +31,39 @@
         </div>
 
         <div class="fields-wrap">
+          
+          <!-- If User selected Credit Card -->
           <div v-if="paymentType === 'Credit Card'">
-            <div class="type-strip"></div>
-            <input type="text" name="cardNumber" placeholder="Card Number" v-model="cardNumber">
-            <input type="text" name="expiration" placeholder="MM/YY" v-model="expiration">
-            <input type="number" name="cvc" placeholder="CVC" v-model="cvc">
+            <div class="type-strip">
+              <div class="checkbox">
+                <input type="checkbox" id="saveCardInfo" value="true" v-model="saveCardInfo">
+                <label for="saveCardInfo">
+                  <span class="custom-checkbox" :class="{ checked: saveCardInfo }"></span>
+                  Save</label>
+              </div>
+              <p class="price-indicator">${{ price }}</p>
+              <div class="clearfix"></div>
+            </div>
+            <div class="fields">
+              <input type="text" name="cardNumber" placeholder="Card Number" v-model="cardNumber">
+              <input type="text" name="expiration" placeholder="MM/YY" v-model="expiration" class="exp">
+              <input type="number" name="cvc" placeholder="CVC" v-model="cvc" class="cvc" :class="{ 'form-group--error': $v.age.$error }">
+            </div>
           </div>
+        
+          <!-- If User Selects payPal -->
           <div v-if="paymentType === 'PayPal'">
-            <div class="type-strip"></div>
-            paypal
+            <div class="type-strip">
+              <img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/PP_logo_h_100x26.png" width="58" height="15" alt="PayPal Logo">
+              <i class="fa fa-lock"></i>
+              <p class="price-indicator">${{ price }}</p>
+              <div class="clearfix"></div>
+            </div>
           </div>
-        </div>
 
+        </div>
+        
+        <!-- Bind classes and html based on paymentType -->
         <button type="submit" name="button"
           :class="buttonClassObject"
           v-html="paymentType === 'Credit Card' ? 'Buy $' + price + ' Credits' : 'Continue on PayPal'">Add Book</button>
@@ -45,24 +73,32 @@
 </template>
 
 <script>
+
+  import { required, minLength, between } from 'vuelidate/lib/validators';
+
   export default {
     name: 'PaymentForm',
     props: {
-      price: Number,
-      cardNumber: String,
-      expiration: String,
-      cvc: Number
-    },
-    methods: {
-      bookSubmit(price) {
-        this.$emit('confirmCheckout', price);
-      }
+      price: Number
     },
     data() {
       return {
-        paymentType: 'Credit Card'
+        cardNumber: null,
+        expiration: null,
+        cvc: null,
+        paymentType: 'Credit Card',
+        saveCardInfo: true,
+        errors: []
       }
     },
+    validations: {
+      cvc: {
+        between: between(3, 4)
+      }
+    },
+    methods: {
+      // this.$emit('confirmCheckout', price);
+    },  
     computed: {
       buttonClassObject: function () {
         return {
@@ -124,6 +160,23 @@
 
   .type-strip {
     width: 100%;
+    background-color: $light_grey;
+    display: block;
+    padding: 5px 20px;
+    margin-bottom: 10px;
+    .checkbox, img, i {
+      float: left;
+    }
+    .price-indicator {
+      float: right;
+      color: $grey;
+      font-weight: 800;
+    }
+    i {
+      margin-left: 8px;
+      font-size: 16px;
+      color: $grey;
+    }
   }
 
   i.credit-card:before {
@@ -147,6 +200,22 @@
     margin: 0 auto;
     display: inline-block;
     border-radius: 3px;
+    .fields {
+      padding: 0 10px;
+    }
+    input[type="text"], input[type="number"] {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    input.exp {
+      width: 65px;
+      float: left;
+    }
+    input.cvc {
+      width: 55px;
+      float: left;
+      margin-left: 10px;
+    }
   }
 
   button {
@@ -169,6 +238,13 @@
     }
     &:hover {
       opacity: .7;
+    }
+  }
+
+  @media(max-width: 767px) {
+    .radio-group-label {
+      display: block;
+      margin: 0 0 10px;
     }
   }
 
