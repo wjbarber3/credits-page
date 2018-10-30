@@ -2,29 +2,35 @@
   <div class="payment-container">
     <h4>Complete Purchase</h4>
       <form @submit.prevent="validateBeforeSubmit">
-
         <div class="radio-group">
           <label class="radio-group-label">Payment Method:</label>
           <div class="radios">
             <div class="radio">
-              <input type="radio" id="creditCard" value="Credit Card" v-model="paymentType" checked>
+              <input
+                type="radio"
+                id="creditCard"
+                value="Credit Card"
+                v-model="paymentType"
+                checked>
               <label class="credit" for="creditCard">
-                <span class="custom-radio" :class="{ checked: paymentType == 'Credit Card' }"></span>
+                <span
+                  class="custom-radio"
+                  :class="{ checked: paymentType == 'Credit Card' }"></span>
                 <i class="credit-card"></i>
                 Credit Card</label>
             </div>
             <div class="radio">
               <input type="radio" id="payPal" value="PayPal" v-model="paymentType">
               <label class="paypal" for="payPal">
-                <span class="custom-radio" :class="{ checked: paymentType == 'PayPal' }"></span>
+                <span
+                  class="custom-radio"
+                  :class="{ checked: paymentType == 'PayPal' }"></span>
                 <i class="paypal"></i>
                 PayPal</label>
             </div>
           </div>
         </div>
-
         <div class="fields-wrap">
-          
           <!-- If User selected Credit Card -->
           <div v-if="paymentType === 'Credit Card'">
             <div class="type-strip">
@@ -38,7 +44,6 @@
               <div class="clearfix"></div>
             </div>
             <div class="fields">
-
               <!-- Card Number -->
               <div class="control">
                 <input
@@ -50,7 +55,6 @@
                   :class="{'input': true, 'is-danger': errors.has('cardNumber') }">
                 <span v-show="errors.has('cardNumber')" class="help is-danger">Please enter a valid credit card number</span>
               </div>
-
               <!-- Expiration Date -->
               <div class="control exp"> 
                 <input
@@ -62,7 +66,6 @@
                   :class="{'input': true, 'is-danger': errors.has('expiration') }">
                 <span v-show="errors.has('expiration')" class="help is-danger">Match MM/YY</span>
               </div>
-              
               <!-- CVC -->
               <div class="control cvc">
                 <input
@@ -76,7 +79,6 @@
               </div>
             </div>
           </div>
-        
           <!-- If User Selects payPal -->
           <div v-if="paymentType === 'PayPal'">
             <div class="type-strip">
@@ -86,16 +88,12 @@
               <div class="clearfix"></div>
             </div>
           </div>
-
         </div>
-        
         <!-- Bind button classes and html based on paymentType -->
         <button type="submit" name="button"
           :class="buttonClassObject"
           v-html="paymentType === 'Credit Card' ? 'Buy $' + price + ' Credits' : 'Continue on PayPal'">Add Book</button>
-
       </form>
-
   </div>
 </template>
 
