@@ -6,7 +6,7 @@
 
 <script>
 
-import CreditList from './components/CreditList.vue';
+import CreditList from './components/CreditList.vue'
 
 export default {
   name: 'app',
@@ -20,6 +20,7 @@ export default {
 
   @import 'styles/typography.scss';
   @import 'styles/variables.scss';
+  @import 'styles/forms.scss';
 
   body {
     background: $light_grey;
