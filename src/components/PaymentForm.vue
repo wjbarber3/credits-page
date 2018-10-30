@@ -101,8 +101,6 @@
 
 <script>
 
-  // import { required, minLength, between, numeric } from 'vuelidate/lib/validators';
-
   export default {
     name: 'PaymentForm',
     props: {
@@ -119,14 +117,13 @@
       }
     },
     methods: {
-      // this.$emit('confirmCheckout', price);
       validateBeforeSubmit() {
         this.$validator.validateAll().then((result) => {
           if (result) {
-            // eslint-disable-next-line
-            alert('Form Submitted!');
+            this.$emit('confirmCheckout', this.paymentType);
             return;
           }
+          alert('You"ve got some errors');
         });
       }
     },  

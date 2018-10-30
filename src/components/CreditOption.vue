@@ -23,7 +23,7 @@
     },
     methods: {
       emitSelection() {
-        this.$emit('emitSelection', this.index, this.option.price);
+        this.$emit('emitSelection', this.index, this.option.price, this.option.bonus);
       }
     }
   }

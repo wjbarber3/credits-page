@@ -14,7 +14,8 @@
     </div>
     <div class="clearfix"></div>
     <payment-form
-      :price="selectedPrice"></payment-form>
+      :price="selectedPrice"
+      @confirmCheckout="alertConfirmation"></payment-form>
   </main>
 </template>
 
@@ -37,16 +38,35 @@ export default {
       creditOptions: [],
       selectedIndex: 2,
       selectedPrice: 100,
+      selectedBonus: 10,
       defaultPaymentType: 'Credit Card'
     }
   },
   methods: {
+    // Mimic Get call to receive initial Data
     getCreditOptions() {
       this.creditOptions = CreditOptionsData;
     },
-    updateSelection(index, price) {
+    updateSelection(index, price, bonus) {
       this.selectedIndex = index;
       this.selectedPrice = price;
+      this.selectedBonus = bonus;
+    },
+    // Recieve the payment type from the child event emitter and alert user based that
+    alertConfirmation(paymentType) {
+      let message = '';
+      if (paymentType === 'Credit Card') {
+        // Update message based on whether or not the user will be receiving a bonus
+        if ( this.selectedBonus > 0 ) {
+          message = "Woohoo! You got " + this.selectedPrice + " bucks worth of credits and a $" + this.selectedBonus + " bonus!!"
+        } else {
+          message = "Woohoo! You got " + this.selectedPrice + " bucks worth of credits!!"
+        }
+      }
+      if (paymentType === 'PayPal') {
+        message = "Woohoo! Off to PayPal for $" + this.selectedPrice;
+      }
+      alert(message);
     }
   },
   created: function() {
