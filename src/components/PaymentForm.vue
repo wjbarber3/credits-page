@@ -222,7 +222,7 @@
     background: url('../assets/cc-bg.png');
     border: 1px solid $med_grey;
     width: 200px;
-    height: 145px;
+    height: 150px;
     margin: 0 auto;
     display: inline-block;
     border-radius: 3px;
