@@ -1,14 +1,7 @@
 <template>
   <div class="payment-container">
     <h4>Complete Purchase</h4>
-      <form @submit.prevent="submitForm()">
-
-         <!-- <p v-if="errors.length">
-          <b>Please correct the following error(s):</b>
-          <ul>
-            <li v-for="error in errors">{{ error }}</li>
-          </ul>
-        </p> -->
+      <form @submit.prevent="validateBeforeSubmit">
 
         <div class="radio-group">
           <label class="radio-group-label">Payment Method:</label>
@@ -45,9 +38,42 @@
               <div class="clearfix"></div>
             </div>
             <div class="fields">
-              <input type="text" name="cardNumber" placeholder="Card Number" v-model="cardNumber">
-              <input type="text" name="expiration" placeholder="MM/YY" v-model="expiration" class="exp">
-              <input type="number" name="cvc" placeholder="CVC" v-model="cvc" class="cvc" :class="{ 'form-group--error': $v.age.$error }">
+
+              <!-- Card Number -->
+              <div class="control">
+                <input
+                  type="text"
+                  name="cardNumber"
+                  placeholder="Card Number"
+                  v-model="cardNumber"
+                  v-validate="'required|credit_card'"
+                  :class="{'input': true, 'is-danger': errors.has('cardNumber') }">
+                <span v-show="errors.has('cardNumber')" class="help is-danger">Please enter a valid credit card number</span>
+              </div>
+
+              <!-- Expiration Date -->
+              <div class="control exp"> 
+                <input
+                  name="expiration"
+                  type="text"
+                  placeholder="MM/YY"
+                  v-model="expiration"
+                  v-validate="'required|date_format:MM/YY'"
+                  :class="{'input': true, 'is-danger': errors.has('expiration') }">
+                <span v-show="errors.has('expiration')" class="help is-danger">Match MM/YY</span>
+              </div>
+              
+              <!-- CVC -->
+              <div class="control cvc">
+                <input
+                  name="cvc"
+                  type="text"
+                  placeholder="CVC"
+                  v-model="cvc"
+                  v-validate="'required|numeric|length:3,4'"
+                  :class="{'input': true, 'is-danger': errors.has('cvc') }">
+                <span v-show="errors.has('cvc')" class="help is-danger">Must be 3 - 4 numbers</span>
+              </div>
             </div>
           </div>
         
@@ -63,18 +89,19 @@
 
         </div>
         
-        <!-- Bind classes and html based on paymentType -->
+        <!-- Bind button classes and html based on paymentType -->
         <button type="submit" name="button"
           :class="buttonClassObject"
           v-html="paymentType === 'Credit Card' ? 'Buy $' + price + ' Credits' : 'Continue on PayPal'">Add Book</button>
 
       </form>
+
   </div>
 </template>
 
 <script>
 
-  import { required, minLength, between } from 'vuelidate/lib/validators';
+  // import { required, minLength, between, numeric } from 'vuelidate/lib/validators';
 
   export default {
     name: 'PaymentForm',
@@ -86,18 +113,22 @@
         cardNumber: null,
         expiration: null,
         cvc: null,
+        name: '',
         paymentType: 'Credit Card',
-        saveCardInfo: true,
-        errors: []
-      }
-    },
-    validations: {
-      cvc: {
-        between: between(3, 4)
+        saveCardInfo: true
       }
     },
     methods: {
       // this.$emit('confirmCheckout', price);
+      validateBeforeSubmit() {
+        this.$validator.validateAll().then((result) => {
+          if (result) {
+            // eslint-disable-next-line
+            alert('Form Submitted!');
+            return;
+          }
+        });
+      }
     },  
     computed: {
       buttonClassObject: function () {
@@ -196,25 +227,44 @@
     background: url('../assets/cc-bg.png');
     border: 1px solid $med_grey;
     width: 200px;
-    height: 130px;
+    height: 145px;
     margin: 0 auto;
     display: inline-block;
     border-radius: 3px;
     .fields {
       padding: 0 10px;
     }
-    input[type="text"], input[type="number"] {
+    .control {
       width: 100%;
-      margin-bottom: 10px;
-    }
-    input.exp {
-      width: 65px;
-      float: left;
-    }
-    input.cvc {
-      width: 55px;
-      float: left;
-      margin-left: 10px;
+      margin-bottom: 20px;
+      position: relative;
+      &.exp {
+        width: 65px;
+        float: left;
+      }
+      &.cvc {
+        width: 55px;
+        float: left;
+        margin-left: 10px;
+        span {
+          width: 100px;
+        }
+      }
+      input {
+        width: 100%;
+      }
+      span {
+        color: $grey;
+        font-size: 9px;
+        width: 100%;
+        text-align: left;
+        display: block;
+        margin-top: 1px;
+        position: absolute;
+        &.is-danger {
+          color: $danger
+        }
+      }
     }
   }
 
@@ -245,6 +295,12 @@
     .radio-group-label {
       display: block;
       margin: 0 0 10px;
+    }
+    button {
+      width: 100%;
+    }
+    .fields-wrap {
+      width: 100%;
     }
   }
 
